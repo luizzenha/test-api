@@ -1,9 +1,8 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
 import { Observable } from "rxjs";
-import { UserCreateDto } from "src/shared/dtos/user-create.dto";
-import { UserCreatedDto } from "src/shared/dtos/user-created.dto";
-import { CreateUserService } from "src/services/create-user.service";
-import { GetAllUsersService } from "src/services/get-all-users.service";
+import { User } from "src/core/domain/interfaces/user.interface";
+import { CreateUserDto } from "src/dtos/create-user.dto";
+import { UserService } from "src/services/user.service";
 
 
 @Controller("/users")
@@ -11,19 +10,18 @@ export class UsersControllers {
 
 
     constructor(
-        private createUserUserCase: CreateUserService,
-        private getAllUsersUserCase: GetAllUsersService
+        private userService: UserService,
     ) { }
 
 
     @Post()
-    public create(@Body() user: UserCreateDto): Observable<UserCreatedDto> {
-        return this.createUserUserCase.execute(user);
+    public create(@Body() user: CreateUserDto): Promise<User> {
+        return this.userService.create(user)
     }
 
 
     @Get()
-    public findAll(): Observable<UserCreatedDto[]> {
-        return this.getAllUsersUserCase.execute()
+    public findAll(): Promise<User[]> {
+        return this.userService.findAll()
     }
 }

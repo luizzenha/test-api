@@ -1,21 +1,18 @@
 
 import { Module } from '@nestjs/common';
-import { UserRepository } from './core/repositories/user.repository';
-import { UsersCacheMemoryRepository } from './data/cache-memory/users-cache-memory.repository';
 import { UsersControllers } from './controllers/users.controller';
-import { CreateUserService } from './services/create-user.service';
-import { GetAllUsersService } from './services/get-all-users.service';
+import { DatabaseModule } from './core/database.module';
+import { userProviders } from './core/providers/user.providers';
+import { UserService } from './services/user.service';
 
 
 @Module({
-  imports: [],
+  imports: [DatabaseModule],
   controllers: [UsersControllers],
-  providers: [{
-    provide: UserRepository,
-    useClass: UsersCacheMemoryRepository
-  },
-    CreateUserService,
-    GetAllUsersService,
+  providers: [
+    UserService,
+    ...userProviders ,
   ],
+  
 })
 export class AppModule { }
